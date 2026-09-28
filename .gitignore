@@ -1,6 +1,4 @@
 *.exe
-*.dll
-*.a
-*.o
 *.i
 *.s
+parenthesesCorrectes.cpp

@@ -11,16 +11,16 @@ g++ -shared -o pile.dll pile_dll.cpp "-Wl,--out-implib,libpile.dll.a" -O2 -std=c
 ```
 
 Produit :
-- `pile.dll` — vrai code (sert au **run**)
-- `libpile.dll.a` — lib d'import / stubs (sert au **link** avec `-L. -lpile`)
+- `pile.dll` — vrai code (sert à l'**exécution**)
+- `libpile.dll.a` — lib d'import / souches (sert à l'**édition de liens** avec `-L. -lpile`)
 
 ## 2. Compiler les programmes
 
 ```powershell
-# Benchmark AVANT DLL (headers directs)
+# Benchmark AVANT DLL (en-têtes directs)
 g++ -o main.exe main.cpp -O2 -std=c++11
 
-# Benchmark APRÈS DLL (via pile.dll, 1 run identique au main)
+# Benchmark APRÈS DLL (via pile.dll, 1 passage identique au main)
 g++ -o bench_dll.exe bench_dll.cpp -L. -lpile -O2 -std=c++11
 
 

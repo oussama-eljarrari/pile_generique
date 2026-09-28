@@ -4,39 +4,44 @@
 #include <vector>
 #include <stdexcept>
 
-// Pile generique implementee a l'aide d'un tableau dynamique.
+// Pile générique implémentée à l'aide d'un tableau dynamique.
 // Utilise std::vector (STL) comme conteneur sous-jacent : la
-// gestion de la capacite et des reallocations est deleguee a la STL.
+// gestion de la capacité et des réallocations est déléguée à la STL.
 template <typename T>
 class Pile_Tableau {
 private:
-    std::vector<T> data;
+    std::vector<T> donnees;
 
 public:
     Pile_Tableau() = default;
 
-    void push(const T& value) {
-        data.push_back(value);
+    // Ajoute une valeur au sommet de la pile.
+    void empiler(const T& valeur) {
+        donnees.push_back(valeur);
     }
 
-    void pop() {
-        if (isEmpty())
+    // Retire la valeur au sommet de la pile.
+    void depiler() {
+        if (estVide())
             throw std::underflow_error("Pile vide");
-        data.pop_back();
+        donnees.pop_back();
     }
 
-    T& top() {
-        if (isEmpty())
+    // Consulte la valeur au sommet sans la retirer.
+    T& sommet() {
+        if (estVide())
             throw std::underflow_error("Pile vide");
-        return data.back();
+        return donnees.back();
     }
 
-    bool isEmpty() const {
-        return data.empty();
+    // Indique si la pile ne contient aucun élément.
+    bool estVide() const {
+        return donnees.empty();
     }
 
-    std::size_t size() const {
-        return data.size();
+    // Retourne le nombre d'éléments contenus dans la pile.
+    std::size_t taille() const {
+        return donnees.size();
     }
 };
 

@@ -3,55 +3,60 @@
 
 #include <stdexcept>
 
-// Pile generique implementee a l'aide d'une liste chainee simple.
-// Implementation manuelle (pas d'utilisation de std::list ni de
-// std::forward_list) : chaque noeud est gere directement avec new/delete.
+// Pile générique implémentée à l'aide d'une liste chaînée simple.
+// Implémentation manuelle (sans std::list ni std::forward_list) :
+// chaque nœud est géré directement avec new/delete.
 template <typename T>
 class Pile_Liste {
 private:
-    struct Node {
-        T value;
-        Node* next;
-        Node(const T& v, Node* n) : value(v), next(n) {}
+    struct Noeud {
+        T valeur;
+        Noeud* suivant;
+        Noeud(const T& v, Noeud* s) : valeur(v), suivant(s) {}
     };
 
-    Node* head;
-    std::size_t count;
+    Noeud* tete;
+    std::size_t compteur;
 
 public:
-    Pile_Liste() : head(nullptr), count(0) {}
+    Pile_Liste() : tete(nullptr), compteur(0) {}
 
     ~Pile_Liste() {
-        while (!isEmpty())
-            pop();
+        while (!estVide())
+            depiler();
     }
 
-    void push(const T& value) {
-        head = new Node(value, head);
-        ++count;
+    // Ajoute une valeur au sommet de la pile.
+    void empiler(const T& valeur) {
+        tete = new Noeud(valeur, tete);
+        ++compteur;
     }
 
-    void pop() {
-        if (isEmpty())
+    // Retire la valeur au sommet de la pile.
+    void depiler() {
+        if (estVide())
             throw std::underflow_error("Pile vide");
-        Node* temp = head;
-        head = head->next;
-        delete temp;
-        --count;
+        Noeud* temporaire = tete;
+        tete = tete->suivant;
+        delete temporaire;
+        --compteur;
     }
 
-    T& top() {
-        if (isEmpty())
+    // Consulte la valeur au sommet sans la retirer.
+    T& sommet() {
+        if (estVide())
             throw std::underflow_error("Pile vide");
-        return head->value;
+        return tete->valeur;
     }
 
-    bool isEmpty() const {
-        return head == nullptr;
+    // Indique si la pile ne contient aucun élément.
+    bool estVide() const {
+        return tete == nullptr;
     }
 
-    std::size_t size() const {
-        return count;
+    // Retourne le nombre d'éléments contenus dans la pile.
+    std::size_t taille() const {
+        return compteur;
     }
 };
 

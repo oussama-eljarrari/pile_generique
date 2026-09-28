@@ -14,22 +14,22 @@ int main() {
 
     // ===== TEST 1 : Pile_Tableau<int> =====
     {
-        Pile_Tableau<int> s;
+        Pile_Tableau<int> pile;
 
-        auto start = high_resolution_clock::now();
-        for (int i = 0; i < N; i++) s.push(i);
-        auto afterPush = high_resolution_clock::now();
+        auto debut = high_resolution_clock::now();
+        for (int i = 0; i < N; i++) pile.empiler(i);
+        auto apresEmpilement = high_resolution_clock::now();
 
-        volatile int val = s.top();
-        (void)val;
-        auto afterTop = high_resolution_clock::now();
+        volatile int valeur = pile.sommet();
+        (void)valeur;
+        auto apresConsultation = high_resolution_clock::now();
 
-        for (int i = 0; i < N; i++) s.pop();
-        auto afterPop = high_resolution_clock::now();
+        for (int i = 0; i < N; i++) pile.depiler();
+        auto apresDepilement = high_resolution_clock::now();
 
-        double empilement   = duration<double, std::milli>(afterPush - start).count();
-        double consultation = duration<double, std::milli>(afterTop - afterPush).count();
-        double depilement   = duration<double, std::milli>(afterPop - afterTop).count();
+        double empilement   = duration<double, std::milli>(apresEmpilement - debut).count();
+        double consultation = duration<double, std::milli>(apresConsultation - apresEmpilement).count();
+        double depilement   = duration<double, std::milli>(apresDepilement - apresConsultation).count();
 
         std::cout << "===== TEST 1 : Pile_Tableau<int> (tableau dynamique) =====" << std::endl;
         std::cout << "Empilement   : " << empilement   << " ms" << std::endl;
@@ -40,22 +40,22 @@ int main() {
 
     // ===== TEST 2 : Pile_Liste<int> =====
     {
-        Pile_Liste<int> s;
+        Pile_Liste<int> pile;
 
-        auto start = high_resolution_clock::now();
-        for (int i = 0; i < N; i++) s.push(i);
-        auto afterPush = high_resolution_clock::now();
+        auto debut = high_resolution_clock::now();
+        for (int i = 0; i < N; i++) pile.empiler(i);
+        auto apresEmpilement = high_resolution_clock::now();
 
-        volatile int val = s.top();
-        (void)val;
-        auto afterTop = high_resolution_clock::now();
+        volatile int valeur = pile.sommet();
+        (void)valeur;
+        auto apresConsultation = high_resolution_clock::now();
 
-        for (int i = 0; i < N; i++) s.pop();
-        auto afterPop = high_resolution_clock::now();
+        for (int i = 0; i < N; i++) pile.depiler();
+        auto apresDepilement = high_resolution_clock::now();
 
-        double empilement   = duration<double, std::milli>(afterPush - start).count();
-        double consultation = duration<double, std::milli>(afterTop - afterPush).count();
-        double depilement   = duration<double, std::milli>(afterPop - afterTop).count();
+        double empilement   = duration<double, std::milli>(apresEmpilement - debut).count();
+        double consultation = duration<double, std::milli>(apresConsultation - apresEmpilement).count();
+        double depilement   = duration<double, std::milli>(apresDepilement - apresConsultation).count();
 
         std::cout << "===== TEST 2 : Pile_Liste<int> (liste chainee) =====" << std::endl;
         std::cout << "Empilement   : " << empilement   << " ms" << std::endl;

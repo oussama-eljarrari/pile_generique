@@ -1,13 +1,13 @@
-#define BUILD_PILE_DLL
+#define CONSTRUCTION_PILE_DLL
 #include "pile_dll.h"
 
 // (Pas d'instanciation explicite avec __declspec ici : MinGW ignore
-// l'attribut apres definition du template et emet un warning.
-// L'instanciation est forcee par les wrappers <int> et la fonction
-// parenthesesCorrectes qui utilisent Pile_Tableau<char>.)
+// l'attribut après définition du patron et émet un avertissement.
+// L'instanciation est forcée par les enveloppes <int> et la fonction
+// parenthesesCorrectes qui utilise Pile_Tableau<char>.)
 
 // ---------------------------------------------------------------------------
-// Fonction C++ exportee (reprise de parenthesesCorrectes.cpp)
+// Fonction C++ exportée (reprise de parenthesesCorrectes.cpp)
 // ---------------------------------------------------------------------------
 bool parenthesesCorrectes(const std::string& expression) {
     Pile_Tableau<char> pile;
@@ -15,87 +15,92 @@ bool parenthesesCorrectes(const std::string& expression) {
     const std::string fermantes = ")]}";
 
     for (char c : expression) {
+        // Symbole ouvrant : on empile
         if (ouvrantes.find(c) != std::string::npos) {
-            pile.push(c);
-        } else if (fermantes.find(c) != std::string::npos) {
-            if (pile.isEmpty())
-                return false;
-
-            char sommet = pile.top();
-            pile.pop();
-
-            std::size_t indexOuvrant = ouvrantes.find(sommet);
-            std::size_t indexFermant = fermantes.find(c);
-
-            if (indexOuvrant != indexFermant)
-                return false;
+            pile.empiler(c);
         }
+        // Symbole fermant : on vérifie la correspondance
+        else if (fermantes.find(c) != std::string::npos) {
+            if (pile.estVide())
+                return false; // fermeture sans ouverture correspondante
+
+            char dessus = pile.sommet();
+            pile.depiler();
+
+            std::size_t indiceOuvrant = ouvrantes.find(dessus);
+            std::size_t indiceFermant = fermantes.find(c);
+
+            if (indiceOuvrant != indiceFermant)
+                return false; // mauvais type de fermeture (ex : "(]")
+        }
+        // Tout autre caractère (lettres, chiffres, opérateurs) est ignoré
     }
 
-    return pile.isEmpty();
+    // Correct si tous les symboles ouverts ont été refermés
+    return pile.estVide();
 }
 
 // ---------------------------------------------------------------------------
-// API C : wrappers autour des classes templates instanciees en <int>
+// API C : enveloppes autour des classes patrons instanciées en <int>
 // ---------------------------------------------------------------------------
 extern "C" {
 
-void* PileTableauInt_create() {
+void* PileTableauInt_creer() {
     return new Pile_Tableau<int>();
 }
-void PileTableauInt_destroy(void* p) {
-    delete static_cast<Pile_Tableau<int>*>(p);
+void PileTableauInt_detruire(void* pile) {
+    delete static_cast<Pile_Tableau<int>*>(pile);
 }
-void PileTableauInt_push(void* p, int value) {
-    static_cast<Pile_Tableau<int>*>(p)->push(value);
+void PileTableauInt_empiler(void* pile, int valeur) {
+    static_cast<Pile_Tableau<int>*>(pile)->empiler(valeur);
 }
-void PileTableauInt_pop(void* p) {
-    static_cast<Pile_Tableau<int>*>(p)->pop();
+void PileTableauInt_depiler(void* pile) {
+    static_cast<Pile_Tableau<int>*>(pile)->depiler();
 }
-int PileTableauInt_top(void* p, int* ok) {
+int PileTableauInt_sommet(void* pile, int* reussi) {
     try {
-        int v = static_cast<Pile_Tableau<int>*>(p)->top();
-        if (ok) *ok = 1;
+        int v = static_cast<Pile_Tableau<int>*>(pile)->sommet();
+        if (reussi) *reussi = 1;
         return v;
     } catch (...) {
-        if (ok) *ok = 0;
+        if (reussi) *reussi = 0;
         return 0;
     }
 }
-int PileTableauInt_isEmpty(void* p) {
-    return static_cast<Pile_Tableau<int>*>(p)->isEmpty() ? 1 : 0;
+int PileTableauInt_estVide(void* pile) {
+    return static_cast<Pile_Tableau<int>*>(pile)->estVide() ? 1 : 0;
 }
-size_t PileTableauInt_size(void* p) {
-    return static_cast<Pile_Tableau<int>*>(p)->size();
+size_t PileTableauInt_taille(void* pile) {
+    return static_cast<Pile_Tableau<int>*>(pile)->taille();
 }
 
-void* PileListeInt_create() {
+void* PileListeInt_creer() {
     return new Pile_Liste<int>();
 }
-void PileListeInt_destroy(void* p) {
-    delete static_cast<Pile_Liste<int>*>(p);
+void PileListeInt_detruire(void* pile) {
+    delete static_cast<Pile_Liste<int>*>(pile);
 }
-void PileListeInt_push(void* p, int value) {
-    static_cast<Pile_Liste<int>*>(p)->push(value);
+void PileListeInt_empiler(void* pile, int valeur) {
+    static_cast<Pile_Liste<int>*>(pile)->empiler(valeur);
 }
-void PileListeInt_pop(void* p) {
-    static_cast<Pile_Liste<int>*>(p)->pop();
+void PileListeInt_depiler(void* pile) {
+    static_cast<Pile_Liste<int>*>(pile)->depiler();
 }
-int PileListeInt_top(void* p, int* ok) {
+int PileListeInt_sommet(void* pile, int* reussi) {
     try {
-        int v = static_cast<Pile_Liste<int>*>(p)->top();
-        if (ok) *ok = 1;
+        int v = static_cast<Pile_Liste<int>*>(pile)->sommet();
+        if (reussi) *reussi = 1;
         return v;
     } catch (...) {
-        if (ok) *ok = 0;
+        if (reussi) *reussi = 0;
         return 0;
     }
 }
-int PileListeInt_isEmpty(void* p) {
-    return static_cast<Pile_Liste<int>*>(p)->isEmpty() ? 1 : 0;
+int PileListeInt_estVide(void* pile) {
+    return static_cast<Pile_Liste<int>*>(pile)->estVide() ? 1 : 0;
 }
-size_t PileListeInt_size(void* p) {
-    return static_cast<Pile_Liste<int>*>(p)->size();
+size_t PileListeInt_taille(void* pile) {
+    return static_cast<Pile_Liste<int>*>(pile)->taille();
 }
 
 int parenthesesCorrectesC(const char* expression) {
